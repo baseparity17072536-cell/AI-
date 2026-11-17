@@ -28,7 +28,11 @@ export async function generateMetadata({ params }: PageProps<"/prompts/[category
   const { category } = await params;
   const cat = getCategory(category);
   if (!cat) return {};
-  return { title: `${cat.title} — CRENIX`, description: `${cat.titleTh}: ${cat.desc}` };
+  return {
+    title: `${cat.title} — CRENIX`,
+    description: `${cat.titleTh}: ${cat.desc}`,
+    alternates: { canonical: `/prompts/${cat.slug}` },
+  };
 }
 
 export default function CategoryPage({ params }: PageProps<"/prompts/[category]">) {

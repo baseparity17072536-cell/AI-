@@ -1,0 +1,38 @@
+import type { Metadata } from "next";
+import { SiteHeader } from "@/components/site-header";
+import { PageGlow, SiteFooter } from "@/components/site-footer";
+import { PricingCards } from "@/components/pricing/pricing-cards";
+
+export const metadata: Metadata = {
+  title: "Pricing — CRENIX",
+  alternates: { canonical: "/pricing" },
+  description: "แพ็กเกจ Free และ Premium ของ CRENIX TECHNOLOGY: เปรียบเทียบสิทธิ์การใช้งาน Prompt Library, Prompt Builder และ Long Video Planner",
+};
+
+export default function PricingPage() {
+  return (
+    <div className="relative flex flex-1 flex-col overflow-x-hidden bg-lux-ink text-stone-100">
+      <PageGlow />
+      <SiteHeader active="pricing" />
+      <main className="relative z-10 mx-auto w-full max-w-7xl flex-1 px-4 pt-12 pb-20 sm:px-6 lg:pt-16">
+        <header className="mx-auto max-w-3xl text-center">
+          <p className="flex items-center justify-center gap-3 text-xs tracking-[0.35em] text-lux-gold sm:text-sm">
+            <span className="h-px w-8 bg-lux-gold/60" />
+            PRICING
+            <span className="h-px w-8 bg-lux-gold/60" />
+          </p>
+          <h1 className="mt-4 bg-linear-to-b from-[#fff3c4] via-lux-bright to-lux-gold bg-clip-text text-3xl leading-tight font-extrabold text-transparent sm:text-5xl">
+            Choose your plan
+          </h1>
+          <p className="mt-4 text-base leading-relaxed text-stone-300 sm:text-lg">
+            เริ่มต้นฟรี แล้วอัปเกรดเป็น Premium เมื่อต้องการเครื่องมือระดับมืออาชีพ
+          </p>
+        </header>
+        <section className="mt-12" aria-label="แพ็กเกจ">
+          <PricingCards />
+        </section>
+      </main>
+      <SiteFooter />
+    </div>
+  );
+}

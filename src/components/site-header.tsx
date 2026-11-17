@@ -13,15 +13,15 @@ import {
   type LucideIcon,
 } from "lucide-react";
 
-type NavKey = "home" | "prompts";
+type NavKey = "home" | "prompts" | "builder" | "my-prompts" | "tutorials" | "pricing";
 
 const navLinks: { key?: NavKey; label: string; href: string; icon: LucideIcon }[] = [
   { key: "home", label: "Home", href: "/", icon: House },
   { key: "prompts", label: "Prompt Library", href: "/prompts", icon: LayoutGrid },
-  { label: "Create", href: "#", icon: Sparkles },
-  { label: "My Projects", href: "#", icon: Folder },
-  { label: "Tutorials", href: "#", icon: GraduationCap },
-  { label: "Pricing", href: "#", icon: Crown },
+  { key: "builder", label: "Create", href: "/builder", icon: Sparkles },
+  { key: "my-prompts", label: "My Prompts", href: "/my-prompts", icon: Folder },
+  { key: "tutorials", label: "Tutorials", href: "/tutorials", icon: GraduationCap },
+  { key: "pricing", label: "Pricing", href: "/pricing", icon: Crown },
 ];
 
 export function SiteHeader({ active }: { active?: NavKey }) {
@@ -59,10 +59,10 @@ export function SiteHeader({ active }: { active?: NavKey }) {
           <button className="hidden items-center gap-1 text-sm text-stone-200 sm:flex">
             <Globe className="h-4 w-4" /> EN <ChevronDown className="h-3 w-3" />
           </button>
-          <a href="#" className="gold-outline hidden rounded-full px-4 py-1.5 text-sm sm:block">
+          <a href="/account" className="gold-outline hidden rounded-full px-4 py-1.5 text-sm sm:block">
             Log In
           </a>
-          <a href="#" className="gold-btn rounded-full px-4 py-1.5 text-sm font-semibold">
+          <a href="/account" className="gold-btn rounded-full px-4 py-1.5 text-sm font-semibold">
             Sign Up
           </a>
           {/* Mobile menu (no JS needed) */}

@@ -1,9 +1,12 @@
 "use client";
 
-import { useState } from "react";
-import { Check, Copy, Heart } from "lucide-react";
+import { useEffect, useState } from "react";
+import { BookmarkPlus, Check, Copy, Heart } from "lucide-react";
+import Link from "next/link";
 import { copyText } from "@/components/prompt-card";
 import { useFavorites } from "@/lib/favorites";
+import { savePrompt, trackRecent } from "@/lib/my-prompts";
+import type { CategorySlug } from "@/data/prompts";
 
 type CopyProps = {
   text: string;
@@ -11,6 +14,8 @@ type CopyProps = {
   copiedLabel?: string;
   variant?: "primary" | "subtle";
   className?: string;
+  /** Library prompt id: records the copy in "Recently Used" */
+  trackId?: string;
 };
 
 /** Copies `text` to the clipboard and shows a short confirmation. */
@@ -20,11 +25,13 @@ export function CopyPromptButton({
   copiedLabel = "คัดลอกแล้ว!",
   variant = "primary",
   className = "",
+  trackId,
 }: CopyProps) {
   const [copied, setCopied] = useState(false);
 
   async function handleCopy() {
     if (await copyText(text)) {
+      if (trackId) trackRecent("library", trackId, "copy");
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     }
@@ -72,5 +79,51 @@ export function FavoriteButton({ id, className = "" }: { id: string; className?:
       <Heart className={`h-5 w-5 ${favorite ? "fill-current" : ""}`} />
       {favorite ? "Saved to Favorites" : "Save Favorite"}
     </button>
+  );
+}
+
+/** Records a library prompt view in "Recently Used" (renders nothing). */
+export function TrackView({ id }: { id: string }) {
+  useEffect(() => {
+    trackRecent("library", id, "view");
+  }, [id]);
+  return null;
+}
+
+/** Saves an editable copy of a library prompt into My Prompts. */
+export function SaveCopyButton({
+  item,
+  className = "",
+}: {
+  item: { id: string; title: string; category: CategorySlug; promptEn: string; promptTh: string };
+  className?: string;
+}) {
+  const [saved, setSaved] = useState(false);
+  return (
+    <div className={className}>
+      <button
+        type="button"
+        onClick={() => {
+          savePrompt({
+            title: item.title,
+            category: item.category,
+            promptEn: item.promptEn,
+            promptTh: item.promptTh,
+            source: { type: "library", libraryId: item.id },
+          });
+          setSaved(true);
+        }}
+        disabled={saved}
+        className="flex w-full items-center justify-center gap-2 rounded-full border border-lux-gold/60 px-5 py-3 font-medium text-stone-200 transition hover:bg-lux-gold/10 disabled:border-emerald-400/60 disabled:text-emerald-300"
+      >
+        {saved ? <Check className="h-5 w-5" /> : <BookmarkPlus className="h-5 w-5" />}
+        {saved ? "บันทึกใน My Prompts แล้ว" : "Save to My Prompts"}
+      </button>
+      {saved && (
+        <Link href="/my-prompts" className="mt-1 block text-center text-xs text-emerald-300 underline">
+          เปิด My Prompts
+        </Link>
+      )}
+    </div>
   );
 }

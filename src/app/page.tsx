@@ -214,15 +214,15 @@ export default function Home() {
               >
                 <Sparkles className="h-5 w-5" /> Browse Prompts <ArrowRight className="h-5 w-5" />
               </Link>
-              <a
-                href="#"
+              <Link
+                href="/tutorials/library-to-builder"
                 className="gold-outline flex items-center justify-center gap-3 rounded-full px-7 py-3.5 text-lg transition hover:bg-amber-500/10"
               >
                 <span className="grid h-8 w-8 place-items-center rounded-full border border-amber-400">
                   <Play className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
                 </span>
                 Watch How It Works
-              </a>
+              </Link>
             </div>
           </div>
 

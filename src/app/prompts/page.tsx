@@ -5,6 +5,7 @@ import { PromptLibrary } from "@/components/library/prompt-library";
 
 export const metadata: Metadata = {
   title: "Prompt Library — CRENIX",
+  alternates: { canonical: "/prompts" },
   description:
     "Discover ready-to-use AI prompts and create professional results with CRENIX TECHNOLOGY. เลือก Prompt ที่คุณต้องการ แล้วนำไปใช้งานหรือปรับแต่งเพิ่มเติมได้ทันที",
 };

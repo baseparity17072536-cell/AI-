@@ -8,7 +8,7 @@ import { PageGlow, SiteFooter } from "@/components/site-footer";
 import { HighlightedPrompt } from "@/components/prompt-card";
 import { PreviewArt } from "@/components/library/preview-art";
 import { StatusBadge, TierBadge } from "@/components/library/badges";
-import { CopyPromptButton, FavoriteButton } from "@/components/library/prompt-actions";
+import { CopyPromptButton, FavoriteButton, SaveCopyButton, TrackView } from "@/components/library/prompt-actions";
 import { RelatedPrompts } from "@/components/library/related-prompts";
 import { builderHref, categoryLabel, sortPrompts, type LibraryPrompt } from "@/components/library/types";
 import { getLibraryPrompt, libraryHowTo, libraryPrompts } from "@/data/library";
@@ -25,7 +25,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await params;
   const item = getLibraryPrompt(id);
   if (!item) return {};
-  return { title: `${item.title} — CRENIX Prompt Library`, description: item.description };
+  return {
+    title: `${item.title} — CRENIX Prompt Library`,
+    description: item.description,
+    alternates: { canonical: `/prompts/${item.category}/${item.id}` },
+    openGraph: { title: item.title, description: item.description },
+  };
 }
 
 export default function PromptDetailPage({ params }: Props) {
@@ -59,6 +64,7 @@ async function PromptDetail({ params }: { params: Props["params"] }) {
 
   return (
     <>
+      <TrackView id={item.id} />
       {/* Breadcrumb */}
       <nav aria-label="breadcrumb" className="flex flex-wrap items-center gap-1 text-sm text-stone-400">
         <Link href="/" className="hover:text-lux-bright">หน้าแรก</Link>
@@ -104,7 +110,7 @@ async function PromptDetail({ params }: { params: Props["params"] }) {
               <h2 id="prompt-en" className="flex items-center gap-2 text-lg font-bold text-lux-bright">
                 <Sparkles className="h-5 w-5" /> Prompt (English)
               </h2>
-              {!locked && <CopyPromptButton text={item.promptEn} label="Copy" variant="subtle" />}
+              {!locked && <CopyPromptButton text={item.promptEn} label="Copy English" variant="subtle" trackId={item.id} />}
             </div>
             <PromptBox text={item.promptEn} locked={locked} />
             {!locked && (
@@ -120,7 +126,7 @@ async function PromptDetail({ params }: { params: Props["params"] }) {
               <h2 id="prompt-th" className="flex items-center gap-2 text-lg font-bold text-white">
                 <Languages className="h-5 w-5 text-lux-gold" /> คำแปลภาษาไทย
               </h2>
-              {!locked && <CopyPromptButton text={item.promptTh} label="Copy ภาษาไทย" variant="subtle" />}
+              {!locked && <CopyPromptButton text={item.promptTh} label="Copy ภาษาไทย" variant="subtle" trackId={item.id} />}
             </div>
             <PromptBox text={item.promptTh} locked={locked} muted />
           </section>
@@ -227,9 +233,10 @@ function DetailActions({ item, locked }: { item: LibraryPrompt; locked: boolean 
             <Lock className="h-4 w-4" /> Prompt นี้สำหรับสมาชิก Premium
           </p>
         ) : (
-          <CopyPromptButton text={item.promptEn} className="w-full" />
+          <CopyPromptButton text={item.promptEn} className="w-full" trackId={item.id} />
         )}
         <FavoriteButton id={item.id} className="w-full" />
+        {!locked && <SaveCopyButton item={item} />}
         <Link
           href={builderHref(item)}
           className="flex w-full items-center justify-center gap-2 rounded-full border border-lux-bright/70 bg-lux-gold/10 px-5 py-3 font-medium text-lux-bright transition hover:bg-lux-gold/20"

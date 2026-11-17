@@ -191,7 +191,7 @@ function directionLines(category: CategorySlug, v: Record<string, Picked | null>
     .filter((f) => v[f.id])
     .map((f) => `${lang === "en" ? f.label : f.labelTh}: ${v[f.id]![lang]}`)
     .join("; ")
-    .concat(".");
+    .concat(lang === "en" ? "." : "");
 }
 
 /* ---------------- video ---------------- */
@@ -228,7 +228,7 @@ function videoPrompt(v: Record<string, Picked | null>, p: PlatformProfile, varia
     ),
   ];
   const th: string[] = [
-    join(["สร้าง", videoType ? `วิดีโอ${videoType.th}` : "คลิปวิดีโอ", styleTh, subj && `ที่มี${subjectTh(subject, subjectDetail)}`, bg?.th], " "),
+    "สร้าง" + join([videoType ? `วิดีโอ${videoType.th}` : "คลิปวิดีโอ", styleTh, subj && `ที่มี${subjectTh(subject, subjectDetail)}`, bg?.th], " "),
   ];
 
   if (lighting) {
@@ -390,7 +390,7 @@ function imagePrompt(v: Record<string, Picked | null>, p: PlatformProfile, varia
     aspect && sentence(`Aspect ratio ${aspect.en}`),
   ].filter(Boolean) as string[];
   const th = [
-    join(["สร้าง", imageType ? imageType.th : "ภาพ", style?.th, subj && `ของ${subjectTh(subject, subjectDetail)}`, bg?.th]),
+    "สร้าง" + join([imageType ? imageType.th : "ภาพ", style?.th, subj && `ของ${subjectTh(subject, subjectDetail)}`, bg?.th]),
     shot?.th,
     lighting && `ใช้${lighting.th}`,
     aspect && `สัดส่วนภาพ${aspect.th}`,

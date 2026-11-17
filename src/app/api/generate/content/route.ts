@@ -10,6 +10,7 @@
 import { AIError } from "@/server/ai/types";
 import { generateContent, type ContentKind } from "@/server/services/content";
 import { rateLimit } from "@/server/rate-limit";
+import { logAIRequest } from "@/server/ai/logger";
 
 const KINDS: ContentKind[] = ["content", "video-editing"];
 const RATE = { limit: 10, windowMs: 10 * 60_000 };
@@ -47,8 +48,20 @@ export async function POST(request: Request) {
     return fail("รูปแบบคำขอไม่ถูกต้อง", 400, "invalid_input");
   }
 
+  const started = Date.now();
   try {
     const result = await generateContent(kind as ContentKind, prompt);
+    logAIRequest({
+      route: "generate/content",
+      provider: result.provider,
+      model: result.model,
+      status: "ok",
+      ms: Date.now() - started,
+      promptChars: prompt.length,
+      inputTokens: result.usage?.inputTokens,
+      outputTokens: result.usage?.outputTokens,
+      generationId: result.generationId,
+    });
     return Response.json({
       text: result.text,
       provider: result.provider,
@@ -57,7 +70,10 @@ export async function POST(request: Request) {
       usage: result.usage,
     });
   } catch (e) {
-    if (e instanceof AIError) return fail(e.message, e.status, e.code);
+    if (e instanceof AIError) {
+      logAIRequest({ route: "generate/content", status: "error", code: e.code, ms: Date.now() - started, promptChars: prompt.length });
+      return fail(e.message, e.status, e.code);
+    }
     console.error("[generate/content] unexpected error", e);
     return fail("เกิดข้อผิดพลาด กรุณาลองใหม่", 500, "server_error");
   }

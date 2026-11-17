@@ -3,7 +3,7 @@
  * Docs: https://developers.openai.com/api/reference/resources/responses/methods/create
  * The API key is read from the server environment only (OPENAI_API_KEY).
  */
-import { AIError, assertServer, type TextGenerationInput, type TextGenerationResult, type TextProvider } from "../types";
+import { AIError, assertServer, hasEnv, type TextGenerationInput, type TextGenerationResult, type TextProvider } from "../types";
 
 assertServer();
 
@@ -18,6 +18,7 @@ type OutputItem = {
   content?: { type?: string; text?: string; refusal?: string }[];
 };
 type ResponsesBody = {
+  id?: string;
   status?: string;
   output?: OutputItem[];
   usage?: { input_tokens?: number; output_tokens?: number };
@@ -27,8 +28,15 @@ type ResponsesBody = {
 export const openaiText: TextProvider = {
   id: "openai",
   name: "OpenAI",
+  capabilities: ["text"],
+  env: ["OPENAI_API_KEY"],
+  docs: [
+    { label: "OpenAI Models", url: "https://developers.openai.com/api/docs/models" },
+    { label: "Responses API", url: "https://developers.openai.com/api/reference/resources/responses/methods/create" },
+  ],
+  implemented: true,
 
-  isConfigured: () => Boolean(process.env.OPENAI_API_KEY?.trim()),
+  isConfigured: () => hasEnv(["OPENAI_API_KEY"]),
 
   async generateText(input: TextGenerationInput): Promise<TextGenerationResult> {
     const key = process.env.OPENAI_API_KEY?.trim();
@@ -84,6 +92,7 @@ export const openaiText: TextProvider = {
       provider: "openai",
       model,
       finish: body.status === "incomplete" ? "incomplete" : "completed",
+      generationId: body.id,
       usage: body.usage
         ? { inputTokens: body.usage.input_tokens ?? 0, outputTokens: body.usage.output_tokens ?? 0 }
         : undefined,

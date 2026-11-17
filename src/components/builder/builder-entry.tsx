@@ -392,6 +392,7 @@ function Builder({ category, libraryId, onChangeCategory }: { category: Category
               }}
               onReset={reset}
               plannerHref={plannerHref}
+              aiKind={category === "content" || category === "video-editing" ? category : undefined}
             />
           ) : (
             <div className="rounded-3xl border border-dashed border-lux-gold/30 bg-lux-card p-8 text-center">

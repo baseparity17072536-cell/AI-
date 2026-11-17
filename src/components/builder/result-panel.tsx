@@ -19,6 +19,7 @@ import {
 import { CopyPromptButton } from "@/components/library/prompt-actions";
 import { STATUS_LABEL, type CapStatus, type PlatformProfile } from "@/data/builder/platforms";
 import type { BuildResult, CompatRow } from "@/lib/builder/engine";
+import { AIGenerate } from "./ai-generate";
 
 type Props = {
   result: BuildResult;
@@ -34,6 +35,8 @@ type Props = {
   onGenerateAgain: () => void;
   onReset: () => void;
   plannerHref?: string;
+  /** Text categories can be generated with AI directly in CRENIX */
+  aiKind?: "content" | "video-editing";
 };
 
 const btnOutline =
@@ -75,6 +78,8 @@ export function ResultPanel(p: Props) {
           <p className="mt-2 rounded-2xl border border-white/10 bg-lux-ink p-4 leading-relaxed whitespace-pre-line text-stone-100">{p.en}</p>
         )}
       </section>
+
+      {p.aiKind && <AIGenerate kind={p.aiKind} prompt={p.en} />}
 
       {/* Thai */}
       <section aria-labelledby="res-th">

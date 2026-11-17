@@ -154,7 +154,18 @@ function CategoryPicker() {
   );
 }
 
-function Builder({ category, libraryId, onChangeCategory }: { category: CategorySlug; libraryId?: string; onChangeCategory: () => void }) {
+/** `studio` renders it as a CRENIX studio page (title + back link to the dashboard). */
+export function Builder({
+  category,
+  libraryId,
+  onChangeCategory,
+  studio,
+}: {
+  category: CategorySlug;
+  libraryId?: string;
+  onChangeCategory: () => void;
+  studio?: { title: string; backLabel: string };
+}) {
   const mode = modeStore.use();
   const item = libraryId ? getLibraryPrompt(libraryId) : undefined;
   const platforms = platformsFor(category);
@@ -248,13 +259,19 @@ function Builder({ category, libraryId, onChangeCategory }: { category: Category
     <div className="mx-auto max-w-7xl">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <button type="button" onClick={onChangeCategory} className="flex items-center gap-2 text-sm text-lux-gold hover:text-lux-bright">
-          <ArrowLeft className="h-4 w-4" /> เปลี่ยนประเภทงาน
+          <ArrowLeft className="h-4 w-4" /> {studio?.backLabel ?? "เปลี่ยนประเภทงาน"}
         </button>
         <ModeSwitch />
       </div>
 
       <h1 className="mt-6 text-3xl font-extrabold text-white sm:text-4xl">
-        {catInfo.label} <span className="text-lux-gold">Prompt Builder</span>
+        {studio ? (
+          <span className="bg-linear-to-b from-[#fff3c4] via-lux-bright to-lux-gold bg-clip-text text-transparent">{studio.title}</span>
+        ) : (
+          <>
+            {catInfo.label} <span className="text-lux-gold">Prompt Builder</span>
+          </>
+        )}
       </h1>
       <p className="mt-1 text-stone-400">{catInfo.th} · คลิกเลือกเฉพาะที่ต้องการ ตัวเลือกที่ไม่เลือกจะไม่ถูกใส่ใน Prompt</p>
 

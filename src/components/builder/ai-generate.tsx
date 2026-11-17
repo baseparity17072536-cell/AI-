@@ -3,6 +3,7 @@
 import { useRef, useState } from "react";
 import { AlertTriangle, Download, Loader2, RefreshCw, Sparkles } from "lucide-react";
 import { CopyPromptButton } from "@/components/library/prompt-actions";
+import { addCreation } from "@/lib/creations";
 
 type Kind = "content" | "video-editing";
 type Result = { text: string; model: string; finish: "completed" | "incomplete" };
@@ -33,6 +34,8 @@ export function AIGenerate({ kind, prompt }: { kind: Kind; prompt: string }) {
       const data = await res.json().catch(() => null);
       if (!res.ok) throw new Error(data?.error?.message ?? `เกิดข้อผิดพลาด (${res.status})`);
       setResult({ text: data.text, model: data.model, finish: data.finish });
+      // Only real, successful generations become creations
+      addCreation({ kind, prompt, output: data.text, provider: data.provider, model: data.model });
       setStatus("done");
     } catch (e) {
       if (e instanceof Error && e.name === "AbortError") return;
@@ -99,7 +102,7 @@ export function AIGenerate({ kind, prompt }: { kind: Kind; prompt: string }) {
             <p className="mt-2 text-xs text-amber-300">ข้อความอาจถูกตัดเพราะยาวเกินขีดจำกัด ลองขอให้สั้นลงแล้วสร้างใหม่</p>
           )}
           <p className="mt-2 text-xs text-stone-500">
-            สร้างโดย {result.model} · ตรวจสอบข้อเท็จจริง ราคา และข้อกล่าวอ้างก่อนนำไปใช้
+            สร้างโดย {result.model} · บันทึกใน Recent Creations แล้ว · ตรวจสอบข้อเท็จจริง ราคา และข้อกล่าวอ้างก่อนนำไปใช้
           </p>
           <div className="mt-3 flex flex-wrap gap-2">
             <CopyPromptButton text={result.text} label="Copy ผลลัพธ์" copiedLabel="คัดลอกแล้ว!" variant="subtle" />

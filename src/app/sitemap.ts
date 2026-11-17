@@ -9,6 +9,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
   return [
     page("/", 1),
     page("/prompts", 0.9),
+    page("/studio", 0.9),
+    ...["image", "video", "audio", "content", "editor"].map((t) => page(`/studio/${t}`, 0.7)),
     page("/builder", 0.8),
     page("/planner", 0.7),
     page("/tutorials", 0.7),

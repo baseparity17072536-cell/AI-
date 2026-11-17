@@ -14,7 +14,7 @@ export default function BuilderPage() {
   return (
     <div className="relative flex flex-1 flex-col overflow-x-hidden bg-lux-ink text-stone-100">
       <PageGlow />
-      <SiteHeader active="builder" />
+      <SiteHeader active="studio" />
       <main className="relative z-10 w-full flex-1 px-4 pt-14 pb-20 sm:px-6">
         {/* BuilderEntry reads ?prompt= with useSearchParams, so it must sit inside Suspense */}
         <Suspense fallback={<div className="mx-auto h-96 max-w-3xl animate-pulse rounded-3xl bg-white/5" />}>

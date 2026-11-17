@@ -13,12 +13,12 @@ import {
   type LucideIcon,
 } from "lucide-react";
 
-type NavKey = "home" | "prompts" | "builder" | "my-prompts" | "tutorials" | "pricing";
+type NavKey = "home" | "prompts" | "studio" | "my-prompts" | "tutorials" | "pricing";
 
 const navLinks: { key?: NavKey; label: string; href: string; icon: LucideIcon }[] = [
   { key: "home", label: "Home", href: "/", icon: House },
   { key: "prompts", label: "Prompt Library", href: "/prompts", icon: LayoutGrid },
-  { key: "builder", label: "Create", href: "/builder", icon: Sparkles },
+  { key: "studio", label: "Create", href: "/studio", icon: Sparkles },
   { key: "my-prompts", label: "My Prompts", href: "/my-prompts", icon: Folder },
   { key: "tutorials", label: "Tutorials", href: "/tutorials", icon: GraduationCap },
   { key: "pricing", label: "Pricing", href: "/pricing", icon: Crown },
